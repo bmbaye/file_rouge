@@ -1,0 +1,6 @@
+gestion_dette\core\Repository.class
+gestion_dette\Main.class
+gestion_dette\datas\entities\User.class
+gestion_dette\datas\entities\enums\Etat.class
+gestion_dette\datas\entities\Role.class
+gestion_dette\core\Connect.class
