@@ -16,15 +16,19 @@ public class ClientRepositoryBd extends RepositoryBdImpl<Client> implements Clie
     public ClientRepositoryBd(UserRepository userRepository){
         this.tableName ="client";
         this.userRepository = userRepository;
+        try {
+            this.getConnexion();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     @Override
     public Client getClientByTel(String tel) {
         Client cl =null;
         try {
-                this.getConnexion();
                 String sql =String.format("SELECT * FORM %s where telephone like ?", this.tableName);
-                
                 this.initPs(sql);
                 this.ps.setString(1, tel);;
                 ResultSet rs =this.executeQuery();
@@ -51,9 +55,7 @@ public class ClientRepositoryBd extends RepositoryBdImpl<Client> implements Clie
     @Override
     public Client getClientBYSurname(String surname) {
         Client cl =null;
-        try {
-                this.getConnexion();
-    
+        try {    
                 String sql =String.format("SELECT * FORM %s where telephone like ?", this.tableName) ;
                 this.initPs(sql);
                 this.ps.setString(1, surname);
@@ -82,7 +84,6 @@ public class ClientRepositoryBd extends RepositoryBdImpl<Client> implements Clie
         List<Client> clients = new ArrayList<>();
        try {
         //charger le driver
-            this.getConnexion();
             String sql =String.format("SELECT * FORM %s", this.tableName) ;
             this.initPs(sql);
             ResultSet rs =this.executeQuery();
@@ -106,8 +107,7 @@ public class ClientRepositoryBd extends RepositoryBdImpl<Client> implements Clie
     public boolean insert(Client client) {
         int last_id =0;
         try {
-            this.getConnexion();
-             String sql =String.format("INSERT INTO client (id_client, surname, telephone, adresse, user_id) VALUES (?, ?, ?, ?, ?)", this.tableName) ;
+             String sql =String.format("INSERT INTO %s (id_client, surname, telephone, adresse, user_id) VALUES (?, ?, ?, ?, ?)", this.tableName) ;
              this.initPs(sql);
              this.setFields(client);
              this.executeUpdate();
@@ -116,11 +116,10 @@ public class ClientRepositoryBd extends RepositoryBdImpl<Client> implements Clie
              while (rs.next()) {
                 last_id = rs.getInt(1);
              }
-             System.out.println("Client ajoute avec succes !");
+             
              return last_id >0;
          }
          catch (SQLException e) {
-             System.out.println("Echec de l'ajout !");
              e.printStackTrace();
          }
          return false;

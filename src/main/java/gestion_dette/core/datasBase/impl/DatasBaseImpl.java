@@ -1,6 +1,5 @@
 package gestion_dette.core.datasBase.impl;
 
-import java.io.File;
 import java.lang.reflect.Field;
 import java.sql.*;
 
@@ -9,15 +8,15 @@ import gestion_dette.core.datasBase.DatasBase;
 public class DatasBaseImpl implements DatasBase {
     protected Connection conn = null;
     protected PreparedStatement ps = null;
-    private String url = "jdbc:postgresql://localhost:5432/postgres";
-    private String user = "postgres";
-    private String password = "Bmbaye-2400";
+    private String url = "jdbc:mysql://localhost/file_rouge";
+    private String user = "root";
+    private String password = "";
 
     @Override
     public void getConnexion() throws SQLException {
         if (this.conn ==null) {
                 try {
-                    Class.forName("org.postgresql.Driver");
+                    Class.forName("com.mysql.cj.jdbc.Driver");
                     conn = DriverManager.getConnection(this.url, this.user, this.password);
                 } catch (ClassNotFoundException e) {
                     // TODO Auto-generated catch block

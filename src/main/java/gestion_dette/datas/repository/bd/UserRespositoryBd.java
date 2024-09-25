@@ -1,6 +1,7 @@
 package gestion_dette.datas.repository.bd;
 
 import gestion_dette.core.repository.impl.RepositoryBdImpl;
+import gestion_dette.datas.entities.Client;
 import gestion_dette.datas.entities.User;
 import gestion_dette.datas.repository.UserRepository;
 import java.util.*;
@@ -10,10 +11,17 @@ public class UserRespositoryBd extends RepositoryBdImpl<User> implements UserRep
 
     public UserRespositoryBd(){
         this.tableName = "user";
+        //charger le driver
+        try {
+            this.getConnexion();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public User getUserByLogin(String login) {
+    public User selectByLogin(String login) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getUserByLogin'");
     }
@@ -23,11 +31,6 @@ public class UserRespositoryBd extends RepositoryBdImpl<User> implements UserRep
         List<User> users = new ArrayList<>();
         Connection conn = null;
        try {
-        //charger le driver
-        Class.forName("org.postgresql.Driver");
-
-        //etablir la connexion
-        conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "Bmbaye-2400");
 
             String sql =String.format("SELECT * FORM %s", this.tableName);
             Statement stmt = null;
@@ -51,11 +54,7 @@ public class UserRespositoryBd extends RepositoryBdImpl<User> implements UserRep
 
             return users;
             
-        } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            System.out.println("impossible de charger le driver");
-        }
+        } 
         catch (SQLException e) {
             System.out.println("Echec de la connection a la base de donnees");
             e.printStackTrace();
@@ -109,5 +108,34 @@ public class UserRespositoryBd extends RepositoryBdImpl<User> implements UserRep
     public User convertToObject(ResultSet rs) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'convertToObject'");
+    }
+
+    @Override
+    public User selectById(int id) {
+        User user =null;
+        try {
+                this.getConnexion();
+                String sql =String.format("SELECT * FORM %s where id_user =  ?", this.tableName);
+                
+                this.initPs(sql);
+                this.ps.setInt(1, id);
+                ResultSet rs =this.executeQuery();
+                if (rs.next()) {
+                    user = this.convertToObject(rs);
+                }
+        }
+        catch (SQLException e) {
+            System.out.println("Echec de la connection a la base de donnees");
+            e.printStackTrace();
+        }
+        finally{
+            try {
+                this.closeConenxion();
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        return user;
     }
 }
