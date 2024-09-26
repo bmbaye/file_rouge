@@ -5,5 +5,5 @@ import java.util.List;
 
 public interface Repository<T>{
     List<T> selectAll();
-    boolean insert(T object);
+    int insert(T object);
 }

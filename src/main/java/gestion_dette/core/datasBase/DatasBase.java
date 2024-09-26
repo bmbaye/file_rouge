@@ -12,6 +12,6 @@ public interface DatasBase {
     String generateSql();
     void setFields(Object entity);
     void initPs(String sql) throws SQLException;
-    Field[] getClassFileds(Object entity);
+    Field[] getClassFields(Object entity);
 
 }
